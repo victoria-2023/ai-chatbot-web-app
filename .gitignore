@@ -1,0 +1,16 @@
+# Environment variables (keep secret)
+.env
+
+# FAISS index files (generated files, large & unnecessary for GitHub)
+faiss_index/
+
+# Python cache files
+__pycache__/
+*.pyc
+
+# Virtual environment
+.venv/
+venv/
+
+# OS-specific files
+.DS_Store
