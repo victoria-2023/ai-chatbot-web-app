@@ -1,11 +1,12 @@
 import streamlit as st
 import requests
 
-# Set the backend API URL
+# ✅ Set Backend API URL
 API_URL = "https://ai-chatbot-web-app-production.up.railway.app/chat"
 
 # Set Page Title & Styling
 st.set_page_config(page_title="AI Chatbot", page_icon="🤖", layout="wide")
+
 st.markdown(
     """
     <style>
@@ -41,15 +42,23 @@ if prompt:
 
     # Send to API
     try:
-        response = requests.post(API_URL, json={"question": prompt})
+        response = requests.post(API_URL, json={"question": prompt}, timeout=10)
         response_data = response.json()
 
+        # Debugging Print
+        print(f"API Response: {response_data}")
+
         # Display AI Response
-        with st.chat_message("assistant"):
-            st.markdown(response_data.get("response", "⚠️ Error: No response received."))
+        if "response" in response_data:
+            answer = response_data["response"]
+        else:
+            answer = "⚠️ Error: No response received from the API."
 
-        st.session_state.messages.append({"role": "assistant", "content": response_data.get("response", "⚠️ Error: No response received.")})
-
-    except Exception as e:
         with st.chat_message("assistant"):
-            st.markdown(f"⚠️ Error: Unable to connect to API.\n\n{str(e)}")
+            st.markdown(answer)
+
+        st.session_state.messages.append({"role": "assistant", "content": answer})
+
+    except requests.exceptions.RequestException as e:
+        with st.chat_message("assistant"):
+            st.markdown(f"⚠️ API Error: Unable to connect.\n\n{str(e)}")
