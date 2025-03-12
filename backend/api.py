@@ -19,7 +19,7 @@ def chat(query: Query):
     response = get_response(query.question)
     return {"response": response}
 
-# Ensure Railway assigns the correct PORT
+# Bind the correct PORT for Railway
 if __name__ == "__main__":
-    port = int(os.getenv("PORT", 8000))  # Use Railway-assigned port
+    port = int(os.getenv("PORT", 8000))  # 🚨 Railway assigns a dynamic port
     uvicorn.run(app, host="0.0.0.0", port=port)
